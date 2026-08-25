@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+ <head>
+   <meta charset="utf-8">
+   <title>Pagina imagen animada</title>
+   <style>
+    body{
+        text-align: center;
+    }
+    canvas{
+        border: 2px solid #5e5e5e;
+        background-color: rgb(0, 0, 0);
+    }
+    </style>
+    <script>
+        var x=Math.random() * 650;
+        var y = Math.random() * 450;
+        var dx = 2;
+        var dy = 2;
+        var imagen= new Image();
+        imagen.src = "logo_dvd.png"; 
+
+        function animate(){    
+            requestAnimationFrame(animate);
+            var canvas = document.getElementById("micanvas");
+            var context = canvas.getContext("2d");
+            context.clearRect(0, 0, innerWidth, innerHeight);
+            context.drawImage(imagen, x, y, 150, 150); 
+            // Rebote horizontal
+            if (x + 150 >= canvas.width || x <= 0){
+                 dx = -dx;
+}
+
+            // Rebote vertical
+        if (y + 150 >= canvas.height || y <= 0){
+       dy = -dy;
+}
+
+// Movimiento
+x += dx;
+y += dy;
+
+        }
+        animate();
+    </script>
+</head>
+<body>
+    <canvas id="micanvas" width="800" height="600"></canvas>
+</body>
+</html>
