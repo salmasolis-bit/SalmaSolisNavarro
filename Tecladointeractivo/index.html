@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ballenas de México</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="canvas" width="900" height="650"></canvas>
+    <aside>Presiona A, R, G, J o F para ver cada ballena.</aside>
+
+    <script src="keycodes.js"></script>
+    <script>
+      window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var W = canvas.width;
+        var H = canvas.height;
+        var actual = null;
+
+        var ballenas = {
+          A: { nombre: "Ballena Azul", src: "images/azul.jpg" },
+          R: { nombre: "Ballena Rorcual", src: "images/rorcual.jpeg" },
+          G: { nombre: "Ballena Gris", src: "images/gris.jpeg" },
+          J: { nombre: "Ballena Jorobada", src: "images/jorobada.jpeg" },
+          F: { nombre: "Ballena Franca", src: "images/franca.webp" },
+        };
+
+        var imagenes = {};
+        Object.keys(ballenas).forEach(function (key) {
+          var img = new Image();
+          img.onload = function () {
+            if (key === actual) dibujarEscena(key);
+          };
+          img.src = ballenas[key].src;
+          imagenes[key] = img;
+        });
+
+        function dibujarImagenCover(img, x, y, w, h) {
+          var imgRatio = img.naturalWidth / img.naturalHeight;
+          var areaRatio = w / h;
+          var sx, sy, sw, sh;
+          if (imgRatio > areaRatio) {
+            sh = img.naturalHeight;
+            sw = sh * areaRatio;
+            sx = (img.naturalWidth - sw) / 2;
+            sy = 0;
+          } else {
+            sw = img.naturalWidth;
+            sh = sw / areaRatio;
+            sx = 0;
+            sy = (img.naturalHeight - sh) / 2;
+          }
+          context.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+        }
+
+        function dibujarTitulo(texto) {
+          context.textAlign = "center";
+          context.font = "600 40pt Montserrat";
+          context.fillStyle = "black";
+          context.fillText(texto, W / 2, 80);
+        }
+
+        function dibujarEscena(key) {
+          var ballena = ballenas[key];
+          if (!ballena) return;
+          actual = key;
+
+          context.clearRect(0, 0, W, H);
+          dibujarTitulo(ballena.nombre);
+
+          var img = imagenes[key];
+          if (img.complete && img.naturalWidth > 0) {
+            dibujarImagenCover(img, 150, 120, 600, 460);
+          }
+        }
+
+        function onKeyboardEvent(event) {
+          switch (event.keyCode) {
+            case keycode.A:
+              console.log("Ballena Azul!");
+              dibujarEscena("A");
+              break;
+            case keycode.R:
+              console.log("Ballena Rorcual!");
+              dibujarEscena("R");
+              break;
+            case keycode.G:
+              console.log("Ballena Gris!");
+              dibujarEscena("G");
+              break;
+            case keycode.J:
+              console.log("Ballena Jorobada!");
+              dibujarEscena("J");
+              break;
+            case keycode.F:
+              console.log("Ballena Franca!");
+              dibujarEscena("F");
+              break;
+            default:
+              console.log(event.keyCode);
+          }
+        }
+
+        dibujarTitulo("Ballenas de México");
+        window.addEventListener("keydown", onKeyboardEvent, false);
+      };
+    </script>
+  </body>
+</html>
