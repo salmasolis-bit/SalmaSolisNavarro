@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Animación Rotación · Cabo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="canvas" width="700" height="760"></canvas>
+    <aside>Mueve el mouse sobre el canvas.</aside>
+
+    <script src="utils.js"></script>
+    <script>
+      window.onload = function () {
+        var canvas = document.getElementById("canvas"),
+          context = canvas.getContext("2d"),
+          mouse = utils.captureMouse(canvas),
+          cabo = new Image();
+
+        var cargada = false;
+        cabo.onload = function () {
+          cargada = true;
+        };
+        cabo.src = "cabo.png";
+
+        // Posición y tamaño con el que se dibuja al pingüino
+        var escala = 0.5;
+        var imgW = cabo.naturalWidth || 736;
+        var imgH = cabo.naturalHeight || 1308;
+        var anchoDibujo = 736 * escala;
+        var altoDibujo = 1308 * escala;
+        var offsetX = (canvas.width - anchoDibujo) / 2;
+        var offsetY = (canvas.height - altoDibujo) / 2;
+
+        // Coordenadas de cada ojo dentro de la imagen original (736x1308)
+        // ya convertidas a la escala y posición con la que se dibuja el pingüino
+        var ojoIzquierdo = {
+          x: offsetX + 390 * escala,
+          y: offsetY + 429 * escala,
+          radioEsclera: 23 * escala,
+          radioPupila: 23 * escala * 0.45,
+          radioMovimiento: 23 * escala * 0.4,
+        };
+
+        var ojoDerecho = {
+          x: offsetX + 443 * escala,
+          y: offsetY + 447 * escala,
+          radioEsclera: 17 * escala,
+          radioPupila: 17 * escala * 0.45,
+          radioMovimiento: 17 * escala * 0.4,
+        };
+
+        function dibujarOjo(ojo) {
+          context.save();
+
+          // esclera (parte blanca del ojo)
+          context.beginPath();
+          context.arc(ojo.x, ojo.y, ojo.radioEsclera, 0, Math.PI * 2);
+          context.fillStyle = "#f5f5f0";
+          context.fill();
+          context.lineWidth = 1;
+          context.strokeStyle = "#1a1a1a";
+          context.stroke();
+
+          // ángulo hacia el mouse (misma lógica que dio la profe)
+          var dx = mouse.x - ojo.x,
+            dy = mouse.y - ojo.y;
+          var radianes = Math.atan2(dy, dx);
+
+          context.translate(ojo.x, ojo.y);
+          context.rotate(radianes);
+
+          // pupila desplazada en la dirección del mouse
+          context.beginPath();
+          context.arc(ojo.radioMovimiento, 0, ojo.radioPupila, 0, Math.PI * 2);
+          context.fillStyle = "#15213b";
+          context.fill();
+
+          // brillito para que se vea más vivo
+          context.beginPath();
+          context.arc(
+            ojo.radioMovimiento - ojo.radioPupila * 0.3,
+            -ojo.radioPupila * 0.3,
+            ojo.radioPupila * 0.35,
+            0,
+            Math.PI * 2
+          );
+          context.fillStyle = "#ffffff";
+          context.fill();
+
+          context.restore();
+        }
+
+        (function drawFrame() {
+          window.requestAnimationFrame(drawFrame, canvas);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (cargada) {
+            context.drawImage(cabo, offsetX, offsetY, anchoDibujo, altoDibujo);
+            dibujarOjo(ojoIzquierdo);
+            dibujarOjo(ojoDerecho);
+          }
+        })();
+      };
+    </script>
+  </body>
+</html>
