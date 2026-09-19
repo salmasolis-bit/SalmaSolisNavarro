@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Animación con Ondas</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="canvas" width="700" height="700"></canvas>
+
+    <script>
+      window.onload = function () {
+        var canvas = document.getElementById("canvas"),
+          context = canvas.getContext("2d"),
+          carita = new Image(),
+          // --- propiedad 1: escala (onda senoidal) ---
+          angleEscala = 0,
+          centerScale = 1,
+          rangeEscala = 0.3,
+          speedEscala = 0.05,
+          escalaX = 1,
+          escalaY = 1,
+          // --- propiedad 2: posición (onda coseno + seno = trayectoria circular) ---
+          anglePosicion = 0,
+          speedPosicion = 0.02,
+          centerX = canvas.width / 2,
+          centerY = canvas.height / 2,
+          radio = 180,
+          posicionX = centerX,
+          posicionY = centerY;
+
+        carita.src = "carita.png";
+
+        (function drawFrame() {
+          window.requestAnimationFrame(drawFrame, canvas);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.save();
+
+          // escala: sube y baja siguiendo una onda senoidal
+          escalaX = escalaY = centerScale + Math.sin(angleEscala) * rangeEscala;
+          angleEscala += speedEscala;
+
+          // posición: se mueve en círculo combinando coseno (x) y seno (y)
+          posicionX = centerX + Math.cos(anglePosicion) * radio;
+          posicionY = centerY + Math.sin(anglePosicion) * radio;
+          anglePosicion += speedPosicion;
+
+          var w = carita.width * escalaX;
+          var h = carita.height * escalaY;
+
+          context.drawImage(carita, posicionX - w / 2, posicionY - h / 2, w, h);
+
+          context.restore();
+        })();
+      };
+    </script>
+  </body>
+</html>
