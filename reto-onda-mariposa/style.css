@@ -1,0 +1,63 @@
+/* style.css */
+
+:root {
+  --verde-fondo: #4e9a3a;
+  --verde-fondo-oscuro: #3e7c2d;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 40px 16px;
+  background: radial-gradient(circle at 50% 0%, var(--verde-fondo) 0%, var(--verde-fondo-oscuro) 100%);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Título estilo "Mario Star!": letras gruesas con contorno blanco */
+.titulo {
+  margin: 0;
+  font-family: "Montserrat", "Segoe UI", sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 5vw, 46px);
+  color: #1c1c1c;
+  text-align: center;
+  letter-spacing: 0.01em;
+
+  /* contorno blanco (Chrome/Edge/Safari) */
+  -webkit-text-stroke: 7px #ffffff;
+  paint-order: stroke fill;
+
+  /* respaldo con sombras para navegadores sin text-stroke */
+  text-shadow:
+    2px 2px 0 #fff,
+    -2px 2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px -2px 0 #fff;
+}
+
+/* Marco blanco tipo foto, igual al de la imagen de referencia */
+.marco {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 8px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+canvas {
+  display: block;
+  max-width: 90vw;
+  height: auto;
+  border-radius: 2px;
+}
+
+.pie {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+}
