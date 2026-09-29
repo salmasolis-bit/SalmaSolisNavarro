@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dibujando en el canvas</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <canvas id="canvas" width="820" height="950"></canvas>
+
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d');
+
+      // Etiqueta chiquita arriba de cada figura, para identificarlas.
+      function etiqueta(texto, x, y) {
+        context.fillStyle = '#333333';
+        context.font = '18px Arial';
+        context.textAlign = 'center';
+        context.fillText(texto, x, y);
+      }
+
+      // ======================================================
+      // 1) CASITA (minimalista: solo techo, cuerpo y ventana)
+      // ======================================================
+      context.save();
+      context.translate(40, 40);
+      etiqueta('Casita', 110, -12);
+
+      // techo
+      context.fillStyle = 'firebrick';
+      context.beginPath();
+      context.moveTo(35, 112);
+      context.lineTo(120, 40);
+      context.lineTo(205, 112);
+      context.closePath();
+      context.fill();
+
+      // cuerpo
+      context.fillStyle = 'burlywood';
+      context.fillRect(50, 112, 140, 90);
+
+      // ventana
+      context.fillStyle = 'skyblue';
+      context.fillRect(100, 150, 40, 40);
+
+      context.restore();
+
+      // ======================================================
+      // 2) HONGUITO (minimalista: gorro, pie y un par de puntos)
+      // ======================================================
+      context.save();
+      context.translate(300, 40);
+      etiqueta('Honguito', 110, -12);
+
+      // pie
+      context.fillStyle = 'wheat';
+      context.fillRect(90, 140, 40, 65);
+
+      // sombrero
+      context.fillStyle = 'red';
+      context.beginPath();
+      context.moveTo(40, 140);
+      context.arc(110, 140, 70, Math.PI, 0, false);
+      context.closePath();
+      context.fill();
+
+      // un par de puntos, nada más
+      context.fillStyle = 'white';
+      context.beginPath();
+      context.arc(85, 100, 10, 0, Math.PI * 2);
+      context.fill();
+      context.beginPath();
+      context.arc(140, 100, 10, 0, Math.PI * 2);
+      context.fill();
+
+      context.restore();
+
+      // ======================================================
+      // 3) ESTRELLA
+      // ======================================================
+      context.save();
+      context.translate(560, 40);
+      etiqueta('Estrella', 110, -12);
+
+      context.fillStyle = 'gold';
+
+      dibujarEstrella(context, 110, 105, 5, 85, 38);
+      context.fill();
+
+      context.restore();
+
+      // ======================================================
+      // 4) LUNA (dos círculos intersectados)
+      // ======================================================
+      context.save();
+      context.translate(170, 315);
+      etiqueta('Luna', 110, -12);
+
+      context.fillStyle = 'lightgray';
+      context.beginPath();
+      context.arc(100, 100, 70, 0, Math.PI * 2);
+      context.fill();
+
+      // círculo blanco encima, desplazado -> deja la forma de creciente
+      context.fillStyle = 'white';
+      context.beginPath();
+      context.arc(125, 85, 70, 0, Math.PI * 2);
+      context.fill();
+
+      context.restore();
+
+      // ======================================================
+      // 5) CARITA FELIZ
+      // ======================================================
+      context.save();
+      context.translate(430, 315);
+      etiqueta('Carita feliz', 110, -12);
+
+      // cara
+      context.fillStyle = 'gold';
+      context.beginPath();
+      context.arc(110, 110, 85, 0, Math.PI * 2);
+      context.fill();
+
+      // ojos
+      context.fillStyle = 'black';
+      context.beginPath();
+      context.arc(80, 95, 9, 0, Math.PI * 2);
+      context.fill();
+      context.beginPath();
+      context.arc(140, 95, 9, 0, Math.PI * 2);
+      context.fill();
+
+      // sonrisa
+      context.strokeStyle = 'black';
+      context.lineWidth = 7;
+      context.lineCap = 'round';
+      context.beginPath();
+      context.arc(110, 115, 45, 0.15 * Math.PI, 0.85 * Math.PI, false);
+      context.stroke();
+
+      context.restore();
+
+      // ======================================================
+      // EXTRA: ZORRO CETYS
+      // ======================================================
+      context.save();
+      context.translate(250, 590);
+      etiqueta('Extra: Zorro CETYS', 160, -12);
+
+      dibujarZorro(context);
+
+      context.restore();
+    };
+
+    // Traza una estrella de "puntas" picos, alternando radio externo/interno.
+    function dibujarEstrella(context, cx, cy, puntas, radioExt, radioInt) {
+      var paso = Math.PI / puntas,
+          angulo, r, x, y, i;
+
+      context.beginPath();
+      for (i = 0; i < puntas * 2; i++) {
+        r = (i % 2 === 0) ? radioExt : radioInt;
+        angulo = i * paso - Math.PI / 2; // para que la primera punta apunte arriba
+        x = cx + Math.cos(angulo) * r;
+        y = cy + Math.sin(angulo) * r;
+        if (i === 0) {
+          context.moveTo(x, y);
+        } else {
+          context.lineTo(x, y);
+        }
+      }
+      context.closePath();
+    }
+
+    // Traza un polígono cerrado a partir de una lista de puntos [x,y].
+    function trazarPoligono(context, puntos) {
+      var i;
+      context.beginPath();
+      context.moveTo(puntos[0][0], puntos[0][1]);
+      for (i = 1; i < puntos.length; i++) {
+        context.lineTo(puntos[i][0], puntos[i][1]);
+      }
+      context.closePath();
+    }
+
+    // Dibuja el zorro de CETYS por capas (silueta, anillo, relleno, orejas, ojos),
+    // usando las coordenadas del contorno real del logo.
+    function dibujarZorro(context) {
+      var siluetaBlanca = [
+            [28, 14], [42, 150], [13, 185], [153, 306],
+            [292, 185], [264, 150], [277, 14], [214, 44],
+            [178, 94], [127, 94], [91, 44]
+          ],
+          anilloNegro = [
+            [40, 24], [53, 147], [27, 178], [153, 287],
+            [278, 178], [253, 147], [265, 24], [208, 51],
+            [175, 96], [130, 96], [97, 51]
+          ],
+          relleno = [
+            [49, 45], [64, 153], [42, 179], [83, 188],
+            [138, 268], [167, 268], [222, 188], [263, 179],
+            [241, 153], [252, 129], [256, 45], [227, 58],
+            [188, 113], [118, 113], [77, 58]
+          ],
+          orejaIzq = [[57, 60], [65, 64], [96, 118], [73, 144], [60, 126]],
+          orejaDer = [[248, 60], [245, 126], [232, 144], [209, 118], [240, 64]],
+          ojoIzq = [[86, 160], [128, 184], [137, 223], [124, 200], [118, 200], [111, 195], [111, 184], [96, 174]],
+          ojoDer = [[219, 160], [209, 174], [194, 184], [193, 196], [187, 200], [181, 200], [168, 223], [177, 184]];
+
+      context.fillStyle = 'white';
+      trazarPoligono(context, siluetaBlanca);
+      context.fill();
+
+      context.fillStyle = 'black';
+      trazarPoligono(context, anilloNegro);
+      context.fill();
+
+      context.fillStyle = 'gold';
+      trazarPoligono(context, relleno);
+      context.fill();
+
+      context.fillStyle = 'black';
+      trazarPoligono(context, orejaIzq);
+      context.fill();
+      trazarPoligono(context, orejaDer);
+      context.fill();
+
+      trazarPoligono(context, ojoIzq);
+      context.fill();
+      trazarPoligono(context, ojoDer);
+      context.fill();
+    }
+    </script>
+  </body>
+</html>
