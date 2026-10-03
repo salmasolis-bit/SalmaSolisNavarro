@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Mi Paint</title>
+    <style>
+      body {
+        background-color: aquamarine;
+        text-align: center;
+      }
+      canvas {
+        border: 5px solid rgb(10, 62, 73);
+        background-color: white;
+      }
+      .colores{
+        width: 100%;
+        height: 50px;
+        text-align: center;
+      }
+      .colores button{
+        width: 100px;
+        height: 40px;
+        margin-right: 5px;
+        margin-top: 5px;
+        border: 1px solid black;
+        cursor: pointer;
+      }
+      #black{
+        background: black;
+      }
+      #red{
+        background: red;
+      }
+      #blue{
+        background: blue;
+      }
+      #green{
+        background: green;
+      }
+      #yellow{
+        background: yellow;
+      }
+      #orange{
+        background: orange;
+      }
+      .colores button:hover{
+        opacity: 0.5;
+      }
+       #otros{
+        width: 100%;
+        height: 60px;
+      }
+      #otros button{
+        width: 200px;
+        height: 50px;
+        background: #303030;
+        color: white;
+        font: 25px impact;
+        cursor: pointer;
+        margin-right: 5px;
+        margin-top: 5px;
+      }
+      #otros button:hover{
+        opacity: 0.5;
+      }
+      #otros button.grosor-activo{
+        background: #0a3e49;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="colores">
+      <button id="black" type="button" value="#000000"></button>
+      <button id="red" type="button" value="#ff0000"></button>
+      <button id="blue" type="button" value="#0000ff"></button>
+      <button id="green" type="button" value="#008000"></button>
+      <button id="yellow" type="button" value="#ffff00"></button>
+      <button id="orange" type="button" value="#ffa500"></button>
+    </div>
+    <div id="otros">
+      <button id="fino" type="button" data-grosor="2">Fino</button>
+      <button id="medio" type="button" data-grosor="6">Medio</button>
+      <button id="grueso" type="button" data-grosor="14">Grueso</button>
+      <button id="clearCanvas" type="button">Borrar todo</button>
+    </div>
+    <canvas id="canvas" width="1200" height="700"></canvas>
+    <aside>Haz clic y dibuja con el mouse.</aside>
+
+    <script src="utils.js"></script>
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          mouse = utils.captureMouse(canvas);
+
+      // Valores iniciales: pluma negra, grosor medio, trazo redondeado.
+      context.strokeStyle = '#000000';
+      context.lineWidth = 6;
+      context.lineCap = 'round';
+      context.lineJoin = 'round';
+
+      canvas.addEventListener('mousedown', function () {
+        context.beginPath();
+        context.moveTo(mouse.x, mouse.y);
+        canvas.addEventListener('mousemove', onMouseMove, false);
+      }, false);
+
+      canvas.addEventListener('mouseup', function () {
+        canvas.removeEventListener('mousemove', onMouseMove, false);
+      }, false);
+
+      function onMouseMove () {
+        context.lineTo(mouse.x, mouse.y);
+        context.stroke();
+      }
+
+      // Handle Colors
+      var colores = document.getElementsByClassName('colores')[0];
+
+      colores.addEventListener('click', function (event) {
+        if (event.target.value) {
+          context.strokeStyle = event.target.value;
+        }
+      });
+
+      // Handle Grosor (mínimo 3 botones, pide data-grosor en px)
+      var botonesGrosor = document.querySelectorAll('#otros button[data-grosor]');
+
+      function marcarGrosorActivo(boton) {
+        for (var i = 0; i < botonesGrosor.length; i++) {
+          botonesGrosor[i].classList.remove('grosor-activo');
+        }
+        boton.classList.add('grosor-activo');
+      }
+
+      for (var i = 0; i < botonesGrosor.length; i++) {
+        botonesGrosor[i].addEventListener('click', function (event) {
+          context.lineWidth = Number(event.target.getAttribute('data-grosor'));
+          marcarGrosorActivo(event.target);
+        });
+      }
+      marcarGrosorActivo(document.getElementById('medio'));
+
+      // Handle Clear Button
+      var clearButton = document.getElementById('clearCanvas');
+
+      clearButton.addEventListener('click', function () {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      });
+    };
+    </script>
+  </body>
+</html>
