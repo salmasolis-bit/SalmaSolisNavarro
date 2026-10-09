@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reloj</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        canvas {
+            background-image: url("cara.jpg");
+            background-repeat: no-repeat;
+        }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="640" height="640"></canvas>
+    <aside>Reloj acelerado (a 60 fps, 60 veces más rápido que uno real): segundero vr3 = 6°/frame, minutero vr2 = 0.1°/frame, horario vr1 = 0.0083°/frame.</aside>
+
+    <script src="utils.js"></script>
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          centroX = canvas.width / 2,
+          centroY = canvas.height / 2,
+
+          // Velocidades de rotación en grados por frame.
+          // En un reloj real: el segundero da 1 vuelta en 60 s, el minutero
+          // en 60 min y el horario en 12 h. Por eso:
+          //   minutero = segundero / 60   y   horario = minutero / 12
+          vr3 = 6,         // segundero
+          vr2 = vr3 / 60,  // minutero (0.1)
+          vr1 = vr2 / 12,  // horario  (0.00833...)
+
+          // Una sola imagen de manecilla (horas.png) para las tres.
+          hora = new Image(),
+
+          // Ángulo actual de cada manecilla (empiezan apuntando a las 12).
+          radianes1 = 0,
+          radianes2 = 0,
+          radianes3 = 0,
+
+          // En horas.png la manecilla viene inclinada ~30.5° a la izquierda.
+          // Se compensa para que con ángulo 0 apunte hacia las 12.
+          inclinacion = 30.5 * Math.PI / 180;
+
+      hora.src = 'horas.png';
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // --- Horario: corto y grueso ---
+        context.save();
+        context.translate(centroX, centroY);
+        radianes1 += vr1 * Math.PI / 180; //to radians
+        context.rotate(radianes1);
+        context.scale(1.1, 0.6);          // ancho, largo
+        context.rotate(inclinacion);
+        context.drawImage(hora, -hora.width / 2, -hora.height / 2);
+        context.restore();
+
+        // --- Minutero: largo y más delgado ---
+        context.save();
+        context.translate(centroX, centroY);
+        radianes2 += vr2 * Math.PI / 180;
+        context.rotate(radianes2);
+        context.scale(0.8, 0.9);
+        context.rotate(inclinacion);
+        context.drawImage(hora, -hora.width / 2, -hora.height / 2);
+        context.restore();
+
+        // --- Segundero: el más largo y delgado (al final, queda encima) ---
+        context.save();
+        context.translate(centroX, centroY);
+        radianes3 += vr3 * Math.PI / 180;
+        context.rotate(radianes3);
+        context.scale(0.3, 1.02);
+        context.rotate(inclinacion);
+        context.drawImage(hora, -hora.width / 2, -hora.height / 2);
+        context.restore();
+      }());
+    };
+    </script>
+  </body>
+</html>
