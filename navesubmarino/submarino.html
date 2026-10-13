@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Nave personalizada</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      #canvas {
+        background-image: url("fondo.jpg");
+        background-size: 100% 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="900" height="600"></canvas>
+    <aside>Flechas izquierda y derecha para girar el submarino, flecha arriba para avanzar.</aside>
+
+    <script src="utils.js"></script>
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          submarino = new Image(),
+          ancho = 170,          // ancho del submarino en pantalla
+          alto = 0,             // se calcula con la proporción de la imagen
+          x = canvas.width / 2,
+          y = canvas.height / 2,
+          rotation = 0,
+          vr = 0,
+          vx = 0,
+          vy = 0,
+          thrust = 0,
+          friction = 0.97,      // fricción del agua: frena poco a poco
+          bounce = -0.7;        // rebote contra los límites
+
+      submarino.src = 'submarino.png';
+
+      window.addEventListener('keydown', function (event) {
+        if (event.keyCode >= 37 && event.keyCode <= 40) {
+          event.preventDefault(); //que las flechas no muevan la página
+        }
+        switch (event.keyCode) {
+        case 37:      //left
+          vr = -3;
+          break;
+        case 39:      //right
+          vr = 3;
+          break;
+        case 38:      //up
+          thrust = 0.12;
+          break;
+        }
+      }, false);
+
+      window.addEventListener('keyup', function (event) {
+        switch (event.keyCode) {
+        case 37:      //left
+        case 39:      //right
+          vr = 0;
+          break;
+        case 38:      //up
+          thrust = 0;
+          break;
+        }
+      }, false);
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        alto = ancho * submarino.height / submarino.width || 0;
+        rotation += vr * Math.PI / 180;
+
+        var angle = rotation,
+            ax = Math.cos(angle) * thrust,
+            ay = Math.sin(angle) * thrust,
+            left = 0,
+            right = canvas.width,
+            top = 0,
+            bottom = canvas.height,
+            // mitad del ancho y del alto de la caja del submarino ya girado
+            mediaAncho = Math.abs(Math.cos(angle)) * ancho / 2 + Math.abs(Math.sin(angle)) * alto / 2,
+            mediaAlto = Math.abs(Math.sin(angle)) * ancho / 2 + Math.abs(Math.cos(angle)) * alto / 2;
+
+        vx += ax;
+        vy += ay;
+        vx *= friction;
+        vy *= friction;
+        x += vx;
+        y += vy;
+
+        // Límites: el submarino rebota en los bordes del canvas
+        if (x + mediaAncho > right) {
+          x = right - mediaAncho;
+          vx *= bounce;
+        } else if (x - mediaAncho < left) {
+          x = left + mediaAncho;
+          vx *= bounce;
+        }
+        if (y + mediaAlto > bottom) {
+          y = bottom - mediaAlto;
+          vy *= bounce;
+        } else if (y - mediaAlto < top) {
+          y = top + mediaAlto;
+          vy *= bounce;
+        }
+
+        // Submarino. La imagen original mira a la izquierda, así que se
+        // voltea en X para que con rotation = 0 mire a la derecha. Si va
+        // hacia la izquierda, también se voltea en Y para que no quede
+        // de cabeza.
+        context.save();
+        context.translate(x, y);
+        context.rotate(rotation);
+        context.scale(-1, Math.cos(rotation) < 0 ? -1 : 1);
+        context.drawImage(submarino, -ancho / 2, -alto / 2, ancho, alto);
+        context.restore();
+      }());
+    };
+    </script>
+  </body>
+</html>
