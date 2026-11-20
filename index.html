@@ -1,34 +1,100 @@
 <!doctype html>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-
-<html>
+<html lang="es">
 <head>
-    <meta charset="utf-8"
-    <tittle> Index</tittle>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Index</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        body{
-            background-color: greenyellow;
-            text-align: center;
+        * {
+            box-sizing: border-box;
         }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-color: #C62D22;
+            color: #FFFFFF;
+            font-family: "Nunito", sans-serif;
+            text-align: center;
+            padding: 64px 16px;
+        }
+
         h1 {
-            color: green;
-            text-align: center;
-            font-family: "Roboto Mono", monospace;
-            font c1ze: 65px;
+            font-size: clamp(40px, 7vw, 72px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0 0 40px;
         }
+
+        img {
+            display: block;
+            width: 220px;
+            max-width: 60%;
+            height: auto;
+            margin: 0 auto 56px;
+        }
+
         p {
-            font-family: verdana;
-            font-size: 20px;
-            font-family: "Elms Sans", sans-serif;
-            font c1ze: 45px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            opacity: 0.8;
+            margin: 0 0 24px;
+        }
+
+        ol {
+            list-style: none;
+            counter-reset: item;
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 0;
+            text-align: left;
+        }
+
+        li {
+            counter-increment: item;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        li:last-child {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        a {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            padding: 14px 8px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 400;
+            transition: padding-left 0.2s ease, background-color 0.2s ease;
+        }
+
+        a::before {
+            content: counter(item, decimal-leading-zero);
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.6;
+            min-width: 24px;
+        }
+
+        a:hover {
+            padding-left: 16px;
+            background-color: rgba(255, 255, 255, 0.08);
         }
     </style>
 </head>
 <body>
-    <h1> Menú de actividades</h1>
-    <img src="gatoestudioso.jpeg">
+    <h1>Menú de actividades</h1>
+    <img src="salmoon.png" alt="Logo Salmoon">
     <p>Index</p>
     <ol>
         <li><a href="A1/pagina1.html">A2 - Pagina Sencilla</a></li>
@@ -45,8 +111,7 @@
         <li><a href="navesubmarino/submarino.html">A8 - Nave personalizada</a></li>
         <li><a href="model/model.html">A2 - Modelo 3D con Model Viewer</a></li>
         
-        
-        
     </ol>
 </body>
+</html>
 </html>
