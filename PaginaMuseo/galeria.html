@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galería del museo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --naranja: #CD8165;
+    --naranja-oscuro: #B86E53;
+    --blanco: #FFFFFF;
+    --beige: #F0E4D8;
+    --azul: #2C3E54;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--naranja);
+    color: var(--blanco);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  .contenedor { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* Encabezado */
+  header { padding: 88px 0 80px; text-align: center; }
+  h1 {
+    font-family: "Fraunces", Georgia, serif; font-weight: 700;
+    font-size: clamp(32px, 4.6vw, 56px); line-height: 1.12; margin: 0 auto; max-width: 24ch;
+    letter-spacing: -0.01em; text-wrap: balance;
+  }
+  .descripcion {
+    max-width: 760px; margin: 28px auto 0; font-size: clamp(17px, 2vw, 19px);
+    color: rgba(255,255,255,.92);
+  }
+
+  .volver {
+    display: inline-block; color: var(--blanco); text-decoration: none; font-weight: 600; font-size: 15px;
+    border: 1px solid rgba(255,255,255,.6); border-radius: 999px; padding: 8px 18px; margin-bottom: 28px;
+  }
+  .volver:hover { background: rgba(255,255,255,.15); }
+  .descripcion { margin-top: 0; }
+  /* Secciones de fotos */
+  section { padding: 48px 0; border-top: 1px solid rgba(255,255,255,.25); }
+  h2 {
+    font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: clamp(26px, 3.4vw, 36px);
+    margin: 0 0 6px;
+  }
+  h2 + .galeria { margin-top: 24px; }
+  .intro { margin: 0 0 28px; color: rgba(255,255,255,.85); max-width: 640px; }
+  .galeria { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .galeria.tres { grid-template-columns: repeat(3, 1fr); }
+  figure { margin: 0; }
+  .galeria.aves { display: flex; flex-wrap: wrap; justify-content: center; }
+  .galeria.aves figure { width: calc((100% - 40px) / 3); }
+  figure.ancha { grid-column: 1 / -1; }
+  .foto {
+    width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;
+    border-radius: 14px; background: var(--naranja-oscuro);
+    box-shadow: 0 10px 30px rgba(60, 25, 10, .25);
+    cursor: zoom-in; transition: transform .25s ease;
+  }
+  .foto:hover { transform: translateY(-3px); }
+  figcaption { font-size: 15px; margin-top: 10px; color: rgba(255,255,255,.9); }
+
+  /* Botón final */
+  .final { text-align: center; padding: 72px 0 96px; }
+  .final p { margin: 0 auto 28px; max-width: 520px; color: rgba(255,255,255,.9); }
+  .boton {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--blanco); color: var(--naranja-oscuro);
+    font-weight: 600; font-size: 18px; text-decoration: none;
+    padding: 16px 34px; border-radius: 999px;
+    box-shadow: 0 10px 28px rgba(60, 25, 10, .25);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .boton:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(60, 25, 10, .32); }
+  .boton:focus-visible { outline: 3px solid var(--blanco); outline-offset: 4px; }
+  footer { text-align: center; font-size: 13px; padding: 0 0 40px; color: rgba(255,255,255,.7); }
+
+  /* Visor de fotos */
+  .visor {
+    position: fixed; inset: 0; background: rgba(30, 15, 8, .9); display: none;
+    align-items: center; justify-content: center; padding: 24px; z-index: 10; cursor: zoom-out;
+  }
+  .visor.abierto { display: flex; }
+  .visor img { max-width: 100%; max-height: 90vh; border-radius: 10px; }
+
+  @media (max-width: 760px) {
+    header { padding: 56px 0 48px; }
+    .galeria, .galeria.tres { grid-template-columns: 1fr; }
+    .galeria.aves figure { width: 100%; }
+  }
+</style>
+</head>
+<body>
+  <header class="contenedor">
+    <a class="volver" href="index.html">← Volver al inicio</a>
+    <p class="descripcion">
+      Un recorrido virtual por cinco aves que representan la riqueza natural de la península.
+      A través de pantallas interactivas, fotografías y fichas informativas, el visitante descubre
+      dónde viven, qué papel cumplen en sus ecosistemas y por qué es importante proteger sus hábitats.
+    </p>
+  </header>
+
+  <main class="contenedor">
+    <section>
+      <h2>El museo por fuera</h2>
+      <div class="galeria tres">
+        <figure><img class="foto" src="fotos/exterior-frente.jpg" alt="Fachada del museo con la puerta de entrada"><figcaption>Fachada y entrada principal.</figcaption></figure>
+        <figure><img class="foto" src="fotos/exterior-aereo.jpg" alt="Vista aérea del museo"><figcaption>Vista aérea del edificio.</figcaption></figure>
+        <figure><img class="foto" src="fotos/exterior-ventanal.jpg" alt="Ventanal de la recepción visto desde afuera"><figcaption>Ventanal de la recepción.</figcaption></figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Museo por dentro</h2>
+      <div class="galeria tres">
+        <figure><img class="foto" src="fotos/interior-panoramica.jpg" alt="Sala principal con pantallas y el mapa de Baja California"><figcaption>Sala principal con el mapa de la península al centro.</figcaption></figure>
+        <figure><img class="foto" src="fotos/interior-recepcion.jpg" alt="Recepción con mostrador y stand de folletos"><figcaption>Recepción y stand de folletos.</figcaption></figure>
+        <figure><img class="foto" src="fotos/interior-tienda.jpg" alt="Stand con camisas, gorras, tazas y tote bags"><figcaption>Stand de recuerdos del museo.</figcaption></figure>
+        <figure><img class="foto" src="fotos/interior-sala-azul.jpg" alt="Pared azul con las pantallas del cóndor y el cuitlacoche"><figcaption>Pared azul: cóndor de California y cuitlacoche ceniciento.</figcaption></figure>
+        <figure><img class="foto" src="fotos/detalle-mapa.jpg" alt="Mapa en relieve de Baja California con el cóndor"><figcaption>Mapa de Baja California y Baja California Sur.</figcaption></figure>
+        <figure><img class="foto" src="fotos/detalle-botones.jpg" alt="Stand con botones de audio, información e imágenes"><figcaption>Botones de audio, información e imágenes.</figcaption></figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Nuestras aves</h2>
+      <div class="galeria aves">
+        <figure><img class="foto" src="fotos/ave-condor.jpg" alt="Pantalla y ficha informativa: Cóndor de California"><figcaption>Cóndor de California</figcaption></figure>
+        <figure><img class="foto" src="fotos/ave-colibri.jpg" alt="Pantalla y ficha informativa: Colibrí de Xantus"><figcaption>Colibrí de Xantus</figcaption></figure>
+        <figure><img class="foto" src="fotos/ave-cuitlacoche.jpg" alt="Pantalla y ficha informativa: Cuitlacoche ceniciento"><figcaption>Cuitlacoche ceniciento</figcaption></figure>
+        <figure><img class="foto" src="fotos/ave-mascarita.jpg" alt="Pantalla y ficha informativa: Mascarita bajacaliforniana"><figcaption>Mascarita bajacaliforniana</figcaption></figure>
+        <figure><img class="foto" src="fotos/ave-pelicano.jpg" alt="Pantalla y ficha informativa: Pelícano café"><figcaption>Pelícano café</figcaption></figure>
+      </div>
+    </section>
+  </main>
+
+
+  <footer style="padding-top:40px">Museo de aves emblemáticas de la Península de Baja California</footer>
+
+  <div class="visor" id="visor" role="dialog" aria-label="Foto ampliada"><img alt=""></div>
+  <script>
+    const visor = document.getElementById("visor");
+    const grande = visor.querySelector("img");
+    document.querySelectorAll(".foto").forEach(img => img.addEventListener("click", () => {
+      grande.src = img.src; grande.alt = img.alt; visor.classList.add("abierto");
+    }));
+    visor.addEventListener("click", () => visor.classList.remove("abierto"));
+    document.addEventListener("keydown", e => { if (e.key === "Escape") visor.classList.remove("abierto"); });
+  </script>
+</body>
+</html>

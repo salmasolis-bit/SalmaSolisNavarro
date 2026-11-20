@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ala Norte · Museo de aves emblemáticas</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: #0B2D63;
+    overflow: hidden;
+    display: grid; place-items: center;
+  }
+
+  /* Relleno para pantallas que no son 16:9: la misma portada, desenfocada */
+  .relleno {
+    position: fixed; inset: -40px;
+    background: url("portada.jpg") center / cover no-repeat;
+    filter: blur(28px) brightness(.75);
+  }
+
+  /* La portada completa siempre visible, en proporción 16:9 */
+  .portada {
+    position: relative;
+    width: min(100vw, calc(100vh * 16 / 9));
+    aspect-ratio: 16 / 9;
+    background: url("portada.jpg") center / contain no-repeat;
+    box-shadow: 0 0 60px rgba(0, 0, 0, .35);
+  }
+
+  .oculto {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  /* Zonas clicables sobre los botones dibujados en la portada */
+  .opcion {
+    position: absolute; display: block;
+    border-radius: 999px;
+    outline: none;
+    transition: box-shadow .15s ease, transform .15s ease;
+  }
+  .opcion.recorre { left: 11.6%; top: 74.4%; width: 24.8%; height: 9.8%; }
+  .opcion.galeria { left: 16.3%; top: 86.5%; width: 14.7%; height: 10%; }
+
+  .opcion.activa {
+    box-shadow: 0 0 0 .35vmin #FFFFFF, 0 0 0 .9vmin rgba(205, 129, 101, .9), 0 .8vmin 2.4vmin rgba(0, 0, 0, .35);
+    transform: translateY(-.3vmin);
+  }
+</style>
+</head>
+<body>
+  <div class="relleno" aria-hidden="true"></div>
+
+  <main class="portada">
+    <h1 class="oculto">Ala Norte · Museo de aves emblemáticas de la península de Baja California</h1>
+    <p class="oculto">Desarrollado por: Salma Solis, Ilse Rivas &amp; Bárbara Zamorano</p>
+
+    <nav aria-label="Menú principal">
+      <a class="opcion recorre activa" href="https://drive.google.com/drive/folders/10v_RoxVEVoxT0RAB6P-PsQNJJuxGvcER?usp=drive_link" target="_blank" rel="noopener" aria-label="Recorre el museo"></a>
+      <a class="opcion galeria" href="galeria.html" aria-label="Galería"></a>
+    </nav>
+  </main>
+
+  <script>
+    // Navegación como en un videojuego: flechas (o W/S) para elegir, Enter para entrar; el mouse también resalta.
+    const opciones = [...document.querySelectorAll(".opcion")];
+    let actual = 0;
+    const marcar = i => {
+      actual = (i + opciones.length) % opciones.length;
+      opciones.forEach((o, k) => o.classList.toggle("activa", k === actual));
+    };
+    opciones.forEach((o, i) => {
+      o.addEventListener("mouseenter", () => marcar(i));
+      o.addEventListener("focus", () => marcar(i));
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") { marcar(actual + 1); e.preventDefault(); }
+      else if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") { marcar(actual - 1); e.preventDefault(); }
+      else if (e.key === "Enter" && document.activeElement === document.body) { opciones[actual].click(); }
+    });
+  </script>
+</body>
+</html>
